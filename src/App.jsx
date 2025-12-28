@@ -6,6 +6,7 @@ import { POSView } from './components/views/pos/POSView';
 import { InventoryView } from './components/views/InventoryView';
 import { SalesHistoryView } from './components/views/SalesHistoryView';
 import { SettingsView } from './components/views/SettingsView';
+import { Protected } from './components/Protected';
 
 function App() {
   return (
@@ -14,9 +15,9 @@ function App() {
         <Routes>
           <Route path="/" element={<DashboardView />} />
           <Route path="/pos" element={<POSView />} />
-          <Route path="/inventory" element={<InventoryView />} />
-          <Route path="/history" element={<SalesHistoryView />} />
-          <Route path="/settings" element={<SettingsView />} />
+          <Route path="/inventory" element={<Protected><InventoryView /></Protected>} />
+          <Route path="/history" element={<Protected><SalesHistoryView /></Protected>} />
+          <Route path="/settings" element={<Protected><SettingsView /></Protected>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MainLayout>

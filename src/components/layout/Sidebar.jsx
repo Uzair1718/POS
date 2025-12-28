@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, ShoppingCart, Package, History, Settings, X, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 
+import logo from '../../assets/logo.png';
+
 export const Sidebar = ({ isOpen, onClose }) => {
     const navItems = [
         { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -27,7 +29,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
                 isOpen ? 'translate-x-0' : '-translate-x-full'
             )}>
                 <div className="p-6 border-b border-slate-800 flex items-center gap-3">
-                    <img src="/src/assets/logo.png" alt="POS" className="w-8 h-8 rounded-lg shadow-lg shadow-emerald-500/20" />
+                    <img src={logo} alt="POS" className="w-8 h-8 rounded-lg shadow-lg shadow-emerald-500/20" />
                     <h1 className="font-bold text-white tracking-wide text-lg">POS System</h1>
                     <button onClick={onClose} className="lg:hidden ml-auto text-slate-400 hover:text-white"><X size={20} /></button>
                 </div>

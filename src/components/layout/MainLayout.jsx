@@ -3,6 +3,8 @@ import { Sidebar } from './Sidebar';
 import { Menu } from 'lucide-react';
 import { useStore } from '../../contexts/StoreContext';
 
+import logo from '../../assets/logo.png';
+
 export const MainLayout = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { settings } = useStore();
@@ -18,7 +20,7 @@ export const MainLayout = ({ children }) => {
                         <Menu size={24} />
                     </button>
                     <div className="flex items-center gap-2">
-                        <img src="/src/assets/logo.png" alt="Logo" className="w-6 h-6 rounded" />
+                        <img src={logo} alt="Logo" className="w-6 h-6 rounded" />
                         <span className="font-bold text-slate-800">{settings.storeName}</span>
                     </div>
                     <div className="w-8"></div>

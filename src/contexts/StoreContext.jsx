@@ -19,7 +19,8 @@ const INITIAL_SETTINGS = {
     phone: "0300-1234567",
     ntn: "1234567-8",
     footerMessage: "Thank you for shopping with us! No return without receipt.",
-    taxRate: 0
+    taxRate: 0,
+    adminPin: "1234"
 };
 
 export const StoreProvider = ({ children }) => {
@@ -40,6 +41,18 @@ export const StoreProvider = ({ children }) => {
         const saved = localStorage.getItem('pos_settings');
         return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
     });
+
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    const login = (pin) => {
+        if (pin === settings.adminPin) {
+            setIsAuthenticated(true);
+            return true;
+        }
+        return false;
+    };
+
+    const logout = () => setIsAuthenticated(false);
 
     // Effects (Persistence)
     useEffect(() => localStorage.setItem('pos_products', JSON.stringify(products)), [products]);
@@ -149,7 +162,10 @@ export const StoreProvider = ({ children }) => {
             addProduct,
             updateProduct,
             deleteProduct,
-            updateSettings
+            updateSettings,
+            isAuthenticated,
+            login,
+            logout
         }}>
             {children}
         </StoreContext.Provider>
