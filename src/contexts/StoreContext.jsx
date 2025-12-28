@@ -29,27 +29,38 @@ const INITIAL_SETTINGS = {
 export const StoreProvider = ({ children }) => {
     const toast = useToast();
     // ... State (unchanged)
-    const [products, setProducts] = useState(() => {
-        const saved = localStorage.getItem('pos_products');
-        return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
-    });
+    // Helper for safe localStorage parsing
+    const safeJSONParse = (key, fallback) => {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : fallback;
+        } catch (error) {
+            console.error(`Error parsing ${key} from localStorage:`, error);
+            return fallback;
+        }
+    };
 
-    const [cart, setCart] = useState([]);
+    const [products, setProducts] = useState(() => safeJSONParse('pos_products', INITIAL_PRODUCTS));
 
-    const [sales, setSales] = useState(() => {
-        const saved = localStorage.getItem('pos_sales');
-        return saved ? JSON.parse(saved) : [];
-    });
+    const [cart, setCart] = useState(() => []); // Cart should start empty on reload usually, or persist? Valid to persist.
+    // Actually previous code was: const [cart, setCart] = useState([]); => it wasn't persisting cart? 
+    // Wait, line 37 in viewed file says: const [cart, setCart] = useState([]); 
+    // Line 110: useEffect(() => localStorage.setItem('pos_products'... 
+    // Cart implies persistence only if added. Previous code did NOT persist cart! 
+    // I will leave cart as empty array for now or persist it if requested, but to be safe I'll leave it as is.
+    // Wait, I should check if I missed cart persistence lines.
+
+    // Resume Safe Parse replacement:
+    const [sales, setSales] = useState(() => safeJSONParse('pos_sales', []));
 
     const [settings, setSettings] = useState(() => {
-        const saved = localStorage.getItem('pos_settings');
-        return saved ? { ...INITIAL_SETTINGS, ...JSON.parse(saved) } : INITIAL_SETTINGS;
+        const saved = safeJSONParse('pos_settings', null);
+        return saved ? { ...INITIAL_SETTINGS, ...saved } : INITIAL_SETTINGS;
     });
 
     const [users, setUsers] = useState(() => {
-        const saved = localStorage.getItem('pos_users');
-        if (saved) return JSON.parse(saved);
-        // Migration: Use INITIAL_SETTINGS.adminPin since settings state might not be ready if defined after
+        const saved = safeJSONParse('pos_users', null);
+        if (saved) return saved;
         return [{ id: 1, name: "Admin", pin: INITIAL_SETTINGS.adminPin || "1234", role: "admin" }];
     });
 
