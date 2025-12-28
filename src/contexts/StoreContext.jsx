@@ -39,7 +39,7 @@ export const StoreProvider = ({ children }) => {
 
     const [settings, setSettings] = useState(() => {
         const saved = localStorage.getItem('pos_settings');
-        return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
+        return saved ? { ...INITIAL_SETTINGS, ...JSON.parse(saved) } : INITIAL_SETTINGS;
     });
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
