@@ -24,23 +24,26 @@
   }
 
   #receipt {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     width: 100%;
+    height: auto;
     margin: 0;
-    padding: 0;
-    box-shadow: none;
+    padding: 20px;
     background: white;
-    color: black;
+    box-shadow: none;
+    z-index: 9999;
+    overflow: visible;
+  }
+
+  .no-print,
+  .no-print * {
+    display: none !important;
   }
 
   @page {
     size: auto;
-    margin: 0mm;
-  }
-
-  .no-print {
-    display: none !important;
+    margin: 0;
   }
 }

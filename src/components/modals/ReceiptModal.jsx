@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Printer } from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { useStore } from '../../contexts/StoreContext';
+import logo from '../../assets/logo.png';
 
 export const ReceiptModal = ({ order, onClose }) => {
     const { settings } = useStore();
@@ -27,7 +28,7 @@ export const ReceiptModal = ({ order, onClose }) => {
                 <div className="p-8 print-area bg-white text-slate-900 text-sm font-mono leading-relaxed" id="receipt">
                     <div className="text-center mb-6">
                         <div className="flex justify-center mb-2">
-                            <img src="/src/assets/logo.png" alt="Logo" className="w-12 h-12 rounded opacity-80 grayscale" />
+                            <img src={logo} alt="Logo" className="w-12 h-12 rounded opacity-80 grayscale" />
                         </div>
                         <h1 className="text-xl font-bold uppercase tracking-wider mb-2">{settings.storeName}</h1>
                         <p className="text-xs text-slate-500">{settings.address}</p>
