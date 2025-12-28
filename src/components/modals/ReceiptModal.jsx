@@ -26,6 +26,9 @@ export const ReceiptModal = ({ order, onClose }) => {
                 {/* Printable Area */}
                 <div className="p-8 print-area bg-white text-slate-900 text-sm font-mono leading-relaxed" id="receipt">
                     <div className="text-center mb-6">
+                        <div className="flex justify-center mb-2">
+                            <img src="/src/assets/logo.png" alt="Logo" className="w-12 h-12 rounded opacity-80 grayscale" />
+                        </div>
                         <h1 className="text-xl font-bold uppercase tracking-wider mb-2">{settings.storeName}</h1>
                         <p className="text-xs text-slate-500">{settings.address}</p>
                         <p className="text-xs text-slate-500">Tel: {settings.phone}</p>

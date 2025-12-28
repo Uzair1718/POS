@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useToast } from './ToastContext';
 
 const StoreContext = createContext();
+
+// ... (INITIAL_PRODUCTS and INITIAL_SETTINGS remain unchanged) 
 
 const INITIAL_PRODUCTS = [
     { id: 1, name: "Super Basmati Rice", price: 350, category: "Grains", stock: 100, image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80" },
@@ -24,7 +27,8 @@ const INITIAL_SETTINGS = {
 };
 
 export const StoreProvider = ({ children }) => {
-    // State
+    const toast = useToast();
+    // ... State (unchanged)
     const [products, setProducts] = useState(() => {
         const saved = localStorage.getItem('pos_products');
         return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
@@ -47,19 +51,23 @@ export const StoreProvider = ({ children }) => {
     const login = (pin) => {
         if (pin === settings.adminPin) {
             setIsAuthenticated(true);
+            toast.success("Access Granted");
             return true;
         }
+        toast.error("Incorrect PIN");
         return false;
     };
 
-    const logout = () => setIsAuthenticated(false);
+    const logout = () => {
+        setIsAuthenticated(false);
+        toast.info("Logged Out");
+    };
 
-    // Effects (Persistence)
+    // ... Effects and Derived State (unchanged)
     useEffect(() => localStorage.setItem('pos_products', JSON.stringify(products)), [products]);
     useEffect(() => localStorage.setItem('pos_sales', JSON.stringify(sales)), [sales]);
     useEffect(() => localStorage.setItem('pos_settings', JSON.stringify(settings)), [settings]);
 
-    // Derived State
     const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
     const taxAmount = (cartTotal * settings.taxRate) / 100;
     const grandTotal = cartTotal + taxAmount;
@@ -67,7 +75,7 @@ export const StoreProvider = ({ children }) => {
     // Actions
     const addToCart = (product) => {
         if (product.stock <= 0) {
-            alert("Out of stock!"); // Consider replacing with toast
+            toast.error("Out of stock!");
             return;
         }
 
@@ -75,14 +83,17 @@ export const StoreProvider = ({ children }) => {
             const existing = prev.find(item => item.id === product.id);
             if (existing) {
                 if (existing.qty >= product.stock) {
-                    alert("Cannot add more than available stock!");
+                    toast.error("Cannot add more than available stock!");
                     return prev;
                 }
+                toast.success(`Updated ${product.name} quantity`);
                 return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + 1 } : item);
             }
+            toast.success(`Added ${product.name} to cart`);
             return [...prev, { ...product, qty: 1 }];
         });
     };
+
 
     const updateQty = (id, delta) => {
         setCart(prev => prev.map(item => {

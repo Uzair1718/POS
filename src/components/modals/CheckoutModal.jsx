@@ -8,11 +8,23 @@ import { ReceiptModal } from './ReceiptModal';
 
 export const CheckoutModal = ({ onClose }) => {
     const { cart, grandTotal, taxAmount, completeSale } = useStore();
-    const [completedOrder, setCompletedOrder] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState("Cash");
+    const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvc: '', name: '' });
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const handleCheckout = () => {
-        const order = completeSale("Cash");
-        setCompletedOrder(order);
+        if (paymentMethod === 'Card') {
+            setIsProcessing(true);
+            // Simulate processing delay
+            setTimeout(() => {
+                const order = completeSale("Card");
+                setCompletedOrder(order);
+                setIsProcessing(false);
+            }, 1500);
+        } else {
+            const order = completeSale("Cash");
+            setCompletedOrder(order);
+        }
     };
 
     if (completedOrder) {
@@ -33,33 +45,79 @@ export const CheckoutModal = ({ onClose }) => {
                         <p className="text-4xl font-bold text-emerald-600">{formatCurrency(grandTotal)}</p>
                     </div>
 
-                    <div className="bg-slate-50 p-4 rounded-lg space-y-2 border border-slate-100">
-                        <div className="flex justify-between text-sm">
-                            <span className="text-slate-600">Items Count</span>
-                            <span className="font-medium">{cart.reduce((a, b) => a + b.qty, 0)}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-slate-600">Tax</span>
-                            <span className="font-medium">{formatCurrency(taxAmount)}</span>
-                        </div>
-                    </div>
-
                     <div className="grid grid-cols-2 gap-3">
-                        <button className="p-4 border-2 border-emerald-500 bg-emerald-50 text-emerald-700 rounded-lg font-bold flex flex-col items-center justify-center gap-2 transition-all hover:bg-emerald-100">
+                        <button
+                            onClick={() => setPaymentMethod("Cash")}
+                            className={`p-4 border-2 rounded-lg font-bold flex flex-col items-center justify-center gap-2 transition-all ${paymentMethod === 'Cash' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'}`}
+                        >
                             <DollarSign size={24} /> Cash
                         </button>
-                        <button className="p-4 border border-slate-200 bg-white text-slate-400 rounded-lg font-bold flex flex-col items-center justify-center gap-2 cursor-not-allowed opacity-60">
-                            <span className="text-xs bg-slate-100 px-2 rounded">Coming Soon</span>
-                            <div className="flex flex-col items-center">
-                                <CreditCard size={24} /> Card
-                            </div>
+                        <button
+                            onClick={() => setPaymentMethod("Card")}
+                            className={`p-4 border-2 rounded-lg font-bold flex flex-col items-center justify-center gap-2 transition-all ${paymentMethod === 'Card' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'}`}
+                        >
+                            <CreditCard size={24} /> Card
                         </button>
                     </div>
+
+                    {paymentMethod === 'Card' && (
+                        <div className="space-y-4 animate-fade-in">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700">Cardholder Name</label>
+                                <input
+                                    type="text"
+                                    placeholder="John Doe"
+                                    className="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                    value={cardDetails.name}
+                                    onChange={e => setCardDetails({ ...cardDetails, name: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700">Card Number</label>
+                                <input
+                                    type="text"
+                                    placeholder="0000 0000 0000 0000"
+                                    maxLength="19"
+                                    className="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono"
+                                    value={cardDetails.number}
+                                    onChange={e => setCardDetails({ ...cardDetails, number: e.target.value })}
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-700">Expiry</label>
+                                    <input
+                                        type="text"
+                                        placeholder="MM/YY"
+                                        maxLength="5"
+                                        className="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono"
+                                        value={cardDetails.expiry}
+                                        onChange={e => setCardDetails({ ...cardDetails, expiry: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-700">CVC</label>
+                                    <input
+                                        type="text"
+                                        placeholder="123"
+                                        maxLength="3"
+                                        className="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono"
+                                        value={cardDetails.cvc}
+                                        onChange={e => setCardDetails({ ...cardDetails, cvc: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="p-4 border-t border-slate-100">
-                    <Button className="w-full py-3 text-lg" onClick={handleCheckout}>
-                        Complete Transaction
+                    <Button
+                        className={`w-full py-3 text-lg ${paymentMethod === 'Card' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
+                        onClick={handleCheckout}
+                        disabled={isProcessing}
+                    >
+                        {isProcessing ? 'Processing...' : `Pay ${formatCurrency(grandTotal)}`}
                     </Button>
                 </div>
             </Card>

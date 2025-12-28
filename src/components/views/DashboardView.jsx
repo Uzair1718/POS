@@ -20,33 +20,42 @@ export const DashboardView = () => {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="p-6 bg-emerald-50 border-emerald-100 flex items-center gap-4">
-                    <div className="p-3 bg-emerald-100 rounded-full text-emerald-600">
-                        <DollarSign size={24} />
-                    </div>
-                    <div>
-                        <p className="text-sm text-slate-500 font-medium">Today's Revenue</p>
-                        <p className="text-2xl font-bold text-slate-800">{formatCurrency(revenueToday)}</p>
-                    </div>
-                </Card>
-
-                <Card className="p-6 bg-blue-50 border-blue-100 flex items-center gap-4">
-                    <div className="p-3 bg-blue-100 rounded-full text-blue-600">
-                        <ShoppingBag size={24} />
-                    </div>
-                    <div>
-                        <p className="text-sm text-slate-500 font-medium">Transactions Today</p>
-                        <p className="text-2xl font-bold text-slate-800">{todaysSales.length}</p>
+                <Card className="p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-100/50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative z-10 flex items-center gap-4">
+                        <div className="p-3 bg-emerald-100 rounded-2xl text-emerald-600 shadow-sm">
+                            <DollarSign size={24} />
+                        </div>
+                        <div>
+                            <p className="text-sm text-slate-500 font-medium">Today's Revenue</p>
+                            <p className="text-3xl font-bold text-slate-800 tracking-tight">{formatCurrency(revenueToday)}</p>
+                        </div>
                     </div>
                 </Card>
 
-                <Card className="p-6 bg-purple-50 border-purple-100 flex items-center gap-4">
-                    <div className="p-3 bg-purple-100 rounded-full text-purple-600">
-                        <Package size={24} />
+                <Card className="p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100/50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative z-10 flex items-center gap-4">
+                        <div className="p-3 bg-blue-100 rounded-2xl text-blue-600 shadow-sm">
+                            <ShoppingBag size={24} />
+                        </div>
+                        <div>
+                            <p className="text-sm text-slate-500 font-medium">Transactions Today</p>
+                            <p className="text-3xl font-bold text-slate-800 tracking-tight">{todaysSales.length}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="text-sm text-slate-500 font-medium">Items Sold Today</p>
-                        <p className="text-2xl font-bold text-slate-800">{itemsSoldToday}</p>
+                </Card>
+
+                <Card className="p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-purple-100/50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative z-10 flex items-center gap-4">
+                        <div className="p-3 bg-purple-100 rounded-2xl text-purple-600 shadow-sm">
+                            <Package size={24} />
+                        </div>
+                        <div>
+                            <p className="text-sm text-slate-500 font-medium">Items Sold Today</p>
+                            <p className="text-3xl font-bold text-slate-800 tracking-tight">{itemsSoldToday}</p>
+                        </div>
                     </div>
                 </Card>
             </div>
