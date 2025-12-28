@@ -11,24 +11,34 @@ export const CheckoutModal = ({ onClose }) => {
     const [paymentMethod, setPaymentMethod] = useState("Cash");
     const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvc: '', name: '' });
     const [isProcessing, setIsProcessing] = useState(false);
+    const [finalOrder, setFinalOrder] = useState(null);
 
     const handleCheckout = () => {
-        if (paymentMethod === 'Card') {
-            setIsProcessing(true);
-            // Simulate processing delay
-            setTimeout(() => {
-                const order = completeSale("Card");
-                setCompletedOrder(order);
-                setIsProcessing(false);
-            }, 1500);
-        } else {
-            const order = completeSale("Cash");
-            setCompletedOrder(order);
+        try {
+            if (paymentMethod === 'Card') {
+                setIsProcessing(true);
+                // Simulate processing delay
+                setTimeout(() => {
+                    const order = completeSale("Card");
+                    if (order) {
+                        setFinalOrder(order);
+                    }
+                    setIsProcessing(false);
+                }, 1500);
+            } else {
+                const order = completeSale("Cash");
+                if (order) {
+                    setFinalOrder(order);
+                }
+            }
+        } catch (error) {
+            console.error("Checkout failed:", error);
+            setIsProcessing(false);
         }
     };
 
-    if (completedOrder) {
-        return <ReceiptModal order={completedOrder} onClose={() => { setCompletedOrder(null); onClose(); }} />;
+    if (finalOrder) {
+        return <ReceiptModal order={finalOrder} onClose={() => { setFinalOrder(null); onClose(); }} />;
     }
 
     return (

@@ -63,14 +63,21 @@ export const Sidebar = ({ isOpen, onClose }) => {
                 </nav>
 
                 <div className="p-4 border-t border-slate-800">
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-xs font-bold text-white shadow-inner">
-                            AD
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 group">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-inner ${currentUser?.role === 'admin' ? 'bg-gradient-to-tr from-purple-500 to-indigo-400' : 'bg-gradient-to-tr from-emerald-500 to-teal-400'}`}>
+                            {currentUser?.name?.substring(0, 2).toUpperCase() || 'US'}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-white text-sm font-medium truncate">Admin User</p>
-                            <p className="text-slate-500 text-xs truncate">Local Manager</p>
+                            <p className="text-white text-sm font-medium truncate">{currentUser?.name || 'User'}</p>
+                            <p className="text-slate-500 text-xs truncate capitalize">{currentUser?.role || 'Staff'}</p>
                         </div>
+                        <button
+                            onClick={logout}
+                            title="Sign Out"
+                            className="p-2 text-slate-400 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                        >
+                            <LogOut size={18} />
+                        </button>
                     </div>
                 </div>
             </aside>
