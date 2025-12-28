@@ -17,7 +17,10 @@ export const MainLayout = ({ children }) => {
                     <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                         <Menu size={24} />
                     </button>
-                    <span className="font-bold text-slate-800">{settings.storeName}</span>
+                    <div className="flex items-center gap-2">
+                        <img src="/src/assets/logo.png" alt="Logo" className="w-6 h-6 rounded" />
+                        <span className="font-bold text-slate-800">{settings.storeName}</span>
+                    </div>
                     <div className="w-8"></div>
                 </header>
 

@@ -6,6 +6,7 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -16,9 +17,12 @@
   body * {
     visibility: hidden;
   }
-  #receipt, #receipt * {
+
+  #receipt,
+  #receipt * {
     visibility: visible;
   }
+
   #receipt {
     position: absolute;
     left: 0;
@@ -27,9 +31,16 @@
     margin: 0;
     padding: 0;
     box-shadow: none;
+    background: white;
+    color: black;
   }
+
   @page {
     size: auto;
     margin: 0mm;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }
