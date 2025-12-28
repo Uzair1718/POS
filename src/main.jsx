@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
-import './index.css';
 import { StoreProvider } from './contexts/StoreContext';
 import { ToastProvider } from './contexts/ToastContext';
 import App from './App';
