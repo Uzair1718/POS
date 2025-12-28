@@ -17,7 +17,7 @@ function App() {
           <Route path="/pos" element={<POSView />} />
           <Route path="/inventory" element={<Protected><InventoryView /></Protected>} />
           <Route path="/history" element={<Protected><SalesHistoryView /></Protected>} />
-          <Route path="/settings" element={<Protected><SettingsView /></Protected>} />
+          <Route path="/settings" element={<Protected requiredRole="admin"><SettingsView /></Protected>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MainLayout>

@@ -46,27 +46,55 @@ export const StoreProvider = ({ children }) => {
         return saved ? { ...INITIAL_SETTINGS, ...JSON.parse(saved) } : INITIAL_SETTINGS;
     });
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [users, setUsers] = useState(() => {
+        const saved = localStorage.getItem('pos_users');
+        if (saved) return JSON.parse(saved);
+        // Migration: Use INITIAL_SETTINGS.adminPin since settings state might not be ready if defined after
+        return [{ id: 1, name: "Admin", pin: INITIAL_SETTINGS.adminPin || "1234", role: "admin" }];
+    });
+
+    const [currentUser, setCurrentUser] = useState(null);
 
     const login = (pin) => {
-        if (pin === settings.adminPin) {
-            setIsAuthenticated(true);
-            toast.success("Access Granted");
+        const user = users.find(u => u.pin === pin);
+        if (user) {
+            setCurrentUser(user);
+            toast.success(`Welcome, ${user.name}`);
             return true;
         }
-        toast.error("Incorrect PIN");
+        toast.error("Invalid PIN");
         return false;
     };
 
     const logout = () => {
-        setIsAuthenticated(false);
+        setCurrentUser(null);
         toast.info("Logged Out");
+    };
+
+    const addUser = (user) => {
+        setUsers(prev => [...prev, { ...user, id: Date.now() }]);
+        toast.success("User added successfully");
+    };
+
+    const updateUser = (updatedUser) => {
+        setUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
+        toast.success("User updated");
+    };
+
+    const deleteUser = (id) => {
+        if (users.length <= 1) {
+            toast.error("Cannot delete the last user");
+            return;
+        }
+        setUsers(prev => prev.filter(u => u.id !== id));
+        toast.success("User deleted");
     };
 
     // ... Effects and Derived State (unchanged)
     useEffect(() => localStorage.setItem('pos_products', JSON.stringify(products)), [products]);
     useEffect(() => localStorage.setItem('pos_sales', JSON.stringify(sales)), [sales]);
     useEffect(() => localStorage.setItem('pos_settings', JSON.stringify(settings)), [settings]);
+    useEffect(() => localStorage.setItem('pos_users', JSON.stringify(users)), [users]);
 
     const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
     const taxAmount = (cartTotal * settings.taxRate) / 100;
@@ -174,9 +202,13 @@ export const StoreProvider = ({ children }) => {
             updateProduct,
             deleteProduct,
             updateSettings,
-            isAuthenticated,
+            currentUser,
+            users,
             login,
-            logout
+            logout,
+            addUser,
+            updateUser,
+            deleteUser
         }}>
             {children}
         </StoreContext.Provider>
