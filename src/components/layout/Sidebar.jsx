@@ -1,11 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Package, History, Settings, X, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, History, Settings, X, ChevronRight, LogOut } from 'lucide-react';
 import clsx from 'clsx';
+import { useStore } from '../../contexts/StoreContext';
 
 import logo from '../../assets/logo.png';
 
 export const Sidebar = ({ isOpen, onClose }) => {
+    const { currentUser, logout } = useStore();
     const navItems = [
         { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/pos', icon: ShoppingCart, label: 'POS Terminal' },
